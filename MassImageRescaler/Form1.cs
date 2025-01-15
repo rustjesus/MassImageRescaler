@@ -7,6 +7,7 @@ namespace MassImageRescaler
         private int width = 1920;
         private int height = 1080;
         private string folderPath;
+        private string[] imageExtensions;
         public Form1()
         {
             InitializeComponent();
@@ -14,7 +15,14 @@ namespace MassImageRescaler
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Define supported image file extensions.
+            imageExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" };
+            supportLabel4.Text = "Supported File Types: ";
+            for (int i = 0; i < imageExtensions.Length; i++)
+            {
+                supportLabel4.Text += " " + imageExtensions[i];
 
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -26,9 +34,6 @@ namespace MassImageRescaler
                                 "Directory Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            // Define supported image file extensions.
-            string[] imageExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif" };
 
             // Process each file in the directory.
             foreach (string filePath in Directory.GetFiles(folderPath))
@@ -62,7 +67,7 @@ namespace MassImageRescaler
 
                                 // Save the resized image with a new file name.
                                 // This example appends a "_resized" suffix before the file extension.
-                                string newFileName = Path.GetFileNameWithoutExtension(filePath) + "_resized" + extension;
+                                string newFileName = Path.GetFileNameWithoutExtension(filePath) + "_resized_" + width + "x" + height + extension;
                                 string newFilePath = Path.Combine(folderPath, newFileName);
 
                                 // Choose a proper format based on the extension.

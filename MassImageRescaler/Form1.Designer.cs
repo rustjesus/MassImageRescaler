@@ -35,6 +35,7 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
+            supportLabel4 = new Label();
             SuspendLayout();
             // 
             // textBox1
@@ -94,17 +95,27 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(239, 44);
+            label3.Location = new Point(239, 45);
             label3.Name = "label3";
             label3.Size = new Size(43, 15);
             label3.TabIndex = 6;
             label3.Text = "Height";
+            // 
+            // supportLabel4
+            // 
+            supportLabel4.AutoSize = true;
+            supportLabel4.Location = new Point(24, 67);
+            supportLabel4.Name = "supportLabel4";
+            supportLabel4.Size = new Size(38, 15);
+            supportLabel4.TabIndex = 7;
+            supportLabel4.Text = "label4";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(722, 90);
+            Controls.Add(supportLabel4);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -128,5 +139,6 @@
         private Label label1;
         private Label label2;
         private Label label3;
+        private Label supportLabel4;
     }
 }
