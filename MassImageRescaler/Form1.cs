@@ -27,7 +27,6 @@ namespace MassImageRescaler
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             if (!Directory.Exists(folderPath))
             {
                 MessageBox.Show("The specified directory does not exist. Please enter a valid path.",
@@ -43,38 +42,60 @@ namespace MassImageRescaler
                 {
                     try
                     {
-                        // Load the original image.
+                        // Load the image and immediately create a clone so that file lock is released.
+                        Image originalImageClone;
                         using (Image originalImage = Image.FromFile(filePath))
                         {
-                            // Create a new bitmap with the specified target size.
-                            using (Bitmap resizedImage = new Bitmap(width, height))
+                            originalImageClone = new Bitmap(originalImage);
+                        }
+
+                        // Create a new bitmap with the specified target size.
+                        using (Bitmap resizedImage = new Bitmap(width, height))
+                        {
+                            // Set the resolution of the new image to match the original.
+                            resizedImage.SetResolution(originalImageClone.HorizontalResolution, originalImageClone.VerticalResolution);
+
+                            // Draw the resized image.
+                            using (Graphics graphics = Graphics.FromImage(resizedImage))
                             {
-                                // Set the resolution of the new image to match the original.
-                                resizedImage.SetResolution(originalImage.HorizontalResolution, originalImage.VerticalResolution);
+                                // Set high-quality settings for resizing.
+                                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                                // Draw the resized image.
-                                using (Graphics graphics = Graphics.FromImage(resizedImage))
-                                {
-                                    // Set high-quality settings for resizing.
-                                    graphics.CompositingQuality = CompositingQuality.HighQuality;
-                                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                                    graphics.SmoothingMode = SmoothingMode.HighQuality;
-                                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                // Draw the cloned image onto the new bitmap.
+                                graphics.DrawImage(originalImageClone, 0, 0, width, height);
+                            }
 
-                                    // Draw the original image onto the new bitmap
-                                    graphics.DrawImage(originalImage, 0, 0, width, height);
-                                }
+                            // Determine the proper image format for saving.
+                            System.Drawing.Imaging.ImageFormat format = GetImageFormat(extension);
 
-                                // Save the resized image with a new file name.
-                                // This example appends a "_resized" suffix before the file extension.
-                                string newFileName = Path.GetFileNameWithoutExtension(filePath) + "_resized_" + width + "x" + height + extension;
+                            if (overrideCheckBox1.Checked)
+                            {
+                                // Save to a temporary file.
+                                string tempFileName = Path.GetFileNameWithoutExtension(filePath) + "_resized_temp" + extension;
+                                string tempFilePath = Path.Combine(folderPath, tempFileName);
+
+                                resizedImage.Save(tempFilePath, format);
+
+                                // Now that we've disposed of all image objects and released file locks,
+                                // delete the original file and rename the temporary file.
+                                File.Delete(filePath);
+                                File.Move(tempFilePath, filePath);
+                            }
+                            else
+                            {
+                                // Append a suffix to create a new file name.
+                                string newFileName = Path.GetFileNameWithoutExtension(filePath)
+                                                     + "_resized_" + width + "x" + height + extension;
                                 string newFilePath = Path.Combine(folderPath, newFileName);
 
-                                // Choose a proper format based on the extension.
-                                System.Drawing.Imaging.ImageFormat format = GetImageFormat(extension);
                                 resizedImage.Save(newFilePath, format);
                             }
                         }
+                        // Dispose of the clone if it isn’t needed further.
+                        originalImageClone.Dispose();
                     }
                     catch (Exception ex)
                     {
@@ -86,6 +107,8 @@ namespace MassImageRescaler
 
             MessageBox.Show("Image processing complete.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+
 
         private char ValidateInput(string text, int charIndex, char addedChar)
         {
@@ -170,6 +193,11 @@ namespace MassImageRescaler
             {
                 e.Handled = true;
             }
+        }
+
+        private void overrideCheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

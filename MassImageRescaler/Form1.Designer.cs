@@ -36,6 +36,7 @@
             label2 = new Label();
             label3 = new Label();
             supportLabel4 = new Label();
+            overrideCheckBox1 = new CheckBox();
             SuspendLayout();
             // 
             // textBox1
@@ -110,11 +111,23 @@
             supportLabel4.TabIndex = 7;
             supportLabel4.Text = "label4";
             // 
+            // overrideCheckBox1
+            // 
+            overrideCheckBox1.AutoSize = true;
+            overrideCheckBox1.Location = new Point(394, 43);
+            overrideCheckBox1.Name = "overrideCheckBox1";
+            overrideCheckBox1.Size = new Size(97, 19);
+            overrideCheckBox1.TabIndex = 8;
+            overrideCheckBox1.Text = "Override Files";
+            overrideCheckBox1.UseVisualStyleBackColor = true;
+            overrideCheckBox1.CheckedChanged += overrideCheckBox1_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(722, 90);
+            Controls.Add(overrideCheckBox1);
             Controls.Add(supportLabel4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -140,5 +153,6 @@
         private Label label2;
         private Label label3;
         private Label supportLabel4;
+        private CheckBox overrideCheckBox1;
     }
 }
