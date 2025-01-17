@@ -34,8 +34,13 @@ namespace MassImageRescaler
                 return;
             }
 
-            // Process each file in the directory.
-            foreach (string filePath in Directory.GetFiles(folderPath))
+            // Determine the search option based on the recursive checkbox.
+            SearchOption searchOption = recursiveCheckBox1.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            // Get all files matching any file name with the specified option.
+            string[] files = Directory.GetFiles(folderPath, "*.*", searchOption);
+
+            foreach (string filePath in files)
             {
                 string extension = Path.GetExtension(filePath).ToLower();
                 if (Array.Exists(imageExtensions, ext => ext == extension))
@@ -75,11 +80,11 @@ namespace MassImageRescaler
                             {
                                 // Save to a temporary file.
                                 string tempFileName = Path.GetFileNameWithoutExtension(filePath) + "_resized_temp" + extension;
-                                string tempFilePath = Path.Combine(folderPath, tempFileName);
+                                string tempFilePath = Path.Combine(Path.GetDirectoryName(filePath), tempFileName);
 
                                 resizedImage.Save(tempFilePath, format);
 
-                                // Now that we've disposed of all image objects and released file locks,
+                                // Now that we've disposed of image objects and released file locks,
                                 // delete the original file and rename the temporary file.
                                 File.Delete(filePath);
                                 File.Move(tempFilePath, filePath);
@@ -89,7 +94,7 @@ namespace MassImageRescaler
                                 // Append a suffix to create a new file name.
                                 string newFileName = Path.GetFileNameWithoutExtension(filePath)
                                                      + "_resized_" + width + "x" + height + extension;
-                                string newFilePath = Path.Combine(folderPath, newFileName);
+                                string newFilePath = Path.Combine(Path.GetDirectoryName(filePath), newFileName);
 
                                 resizedImage.Save(newFilePath, format);
                             }
@@ -107,7 +112,6 @@ namespace MassImageRescaler
 
             MessageBox.Show("Image processing complete.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
 
 
         private char ValidateInput(string text, int charIndex, char addedChar)
@@ -196,6 +200,11 @@ namespace MassImageRescaler
         }
 
         private void overrideCheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void recursiveCheckBox1_CheckedChanged(object sender, EventArgs e)
         {
 
         }

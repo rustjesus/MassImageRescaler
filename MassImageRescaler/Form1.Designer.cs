@@ -37,6 +37,7 @@
             label3 = new Label();
             supportLabel4 = new Label();
             overrideCheckBox1 = new CheckBox();
+            recursiveCheckBox1 = new CheckBox();
             SuspendLayout();
             // 
             // textBox1
@@ -122,11 +123,23 @@
             overrideCheckBox1.UseVisualStyleBackColor = true;
             overrideCheckBox1.CheckedChanged += overrideCheckBox1_CheckedChanged;
             // 
+            // recursiveCheckBox1
+            // 
+            recursiveCheckBox1.AutoSize = true;
+            recursiveCheckBox1.Location = new Point(497, 41);
+            recursiveCheckBox1.Name = "recursiveCheckBox1";
+            recursiveCheckBox1.Size = new Size(76, 19);
+            recursiveCheckBox1.TabIndex = 9;
+            recursiveCheckBox1.Text = "Recursive";
+            recursiveCheckBox1.UseVisualStyleBackColor = true;
+            recursiveCheckBox1.CheckedChanged += recursiveCheckBox1_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(722, 90);
+            Controls.Add(recursiveCheckBox1);
             Controls.Add(overrideCheckBox1);
             Controls.Add(supportLabel4);
             Controls.Add(label3);
@@ -154,5 +167,6 @@
         private Label label3;
         private Label supportLabel4;
         private CheckBox overrideCheckBox1;
+        private CheckBox recursiveCheckBox1;
     }
 }
